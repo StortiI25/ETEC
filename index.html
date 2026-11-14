@@ -109,7 +109,7 @@ footer{text-align:center;padding:18px;color:#98a2ad;font-size:12px}
 </section>
 
 <section id="realbank" class="view">
- <div class="section-head"><div><h1 style="margin:0 0 5px">Banco de provas reais 📚</h1><div class="sub">Banco ampliado com provas anteriores, gabaritos oficiais e questões inéditas no estilo ETEC.</div></div></div>
+ <div class="section-head"><div><h1 style="margin:0 0 5px">Banco de provas reais 📚</h1><div class="sub">Questões dos cadernos enviados + questões inéditas criadas no mesmo estilo.</div></div></div>
  <div class="card" style="margin-bottom:16px">
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px">
    <label style="font-weight:800">Edição da prova
@@ -248,7 +248,7 @@ function touchStudy(){let t=today();if(state.lastStudy!==t){let y=new Date();y.s
 function level(){return Math.min(LEVELS.length-1,Math.floor(state.xp/100))}
 function showView(v){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));document.getElementById(v).classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.view===v));if(v!=="lesson")render()}
 document.querySelectorAll(".nav").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
-let lessonQuestions=[],lessonIndex=0,selected=-1,answeredCurrent=false,lessonSubject="",activeMissionId=null;
+let lessonQuestions=[],lessonIndex=0,selected=-1,answeredCurrent=false,lessonCompleted=false,lessonSubject="",activeMissionId=null;
 
 const MISSION_STAGES=[
  {id:"fundamentos",name:"Fundamentos",icon:"⭐",desc:"Comece pelo básico"},
@@ -271,6 +271,7 @@ function renderMissionPath(){
  }).join("");hosts.forEach(host=>host.innerHTML=markup);
 }
 function startMission(subject,index){
+ lessonCompleted=false;
  if(!missionUnlocked(subject,index)){showToast("Complete a fase anterior para desbloquear esta missão.");return}
  const pool=BANK.filter(q=>q.s===subject);
  if(!pool.length){showToast("Ainda não há questões cadastradas para esta matéria.");return}
@@ -280,13 +281,13 @@ function startMission(subject,index){
  lessonIndex=0;showView("lesson");renderQuestion();
 }
 
-function startLesson(subject){activeMissionId=null;examMode=false;lessonSubject=subject;let pool=subject==="Todas"?[...BANK]:BANK.filter(q=>q.s===subject);lessonQuestions=pool.sort(()=>Math.random()-.5).slice(0,5);lessonIndex=0;showView("lesson");renderQuestion()}
+function startLesson(subject){lessonCompleted=false;activeMissionId=null;examMode=false;lessonSubject=subject;let pool=subject==="Todas"?[...BANK]:BANK.filter(q=>q.s===subject);lessonQuestions=pool.sort(()=>Math.random()-.5).slice(0,5);lessonIndex=0;showView("lesson");renderQuestion()}
 let examMode=false;
-function startLevel(levelName){activeMissionId=null;examMode=false;let groups={"Fácil":BANK.slice(0,17),"Intermediário":BANK.slice(17,34),"Desafio":BANK.slice(34)};let pool=groups[levelName]||BANK;lessonSubject=levelName;lessonQuestions=[...pool].sort(()=>Math.random()-.5).slice(0,5);lessonIndex=0;showView("lesson");renderQuestion()}
-function startExam(){activeMissionId=null;examMode=true;lessonSubject="Simulado ETEC";lessonQuestions=[...BANK].sort(()=>Math.random()-.5).slice(0,Math.min(50,BANK.length));lessonIndex=0;showView("lesson");renderQuestion()}
+function startLevel(levelName){lessonCompleted=false;activeMissionId=null;examMode=false;let groups={"Fácil":BANK.slice(0,17),"Intermediário":BANK.slice(17,34),"Desafio":BANK.slice(34)};let pool=groups[levelName]||BANK;lessonSubject=levelName;lessonQuestions=[...pool].sort(()=>Math.random()-.5).slice(0,5);lessonIndex=0;showView("lesson");renderQuestion()}
+function startExam(){lessonCompleted=false;activeMissionId=null;examMode=true;lessonSubject="Simulado ETEC";lessonQuestions=[...BANK].sort(()=>Math.random()-.5).slice(0,Math.min(50,BANK.length));lessonIndex=0;showView("lesson");renderQuestion()}
 
 function renderQuestion(){let q=lessonQuestions[lessonIndex];selected=-1;answeredCurrent=false;document.getElementById("qSubject").textContent=q.s.toUpperCase()+" · "+(q.origin||"TREINAMENTO");document.getElementById("qText").textContent=q.q;document.getElementById("lessonCount").textContent=(lessonIndex+1)+"/"+lessonQuestions.length;document.getElementById("lessonBar").style.width=(lessonIndex/lessonQuestions.length*100)+"%";document.getElementById("feedback").className="feedback";document.getElementById("feedback").textContent="";document.getElementById("checkBtn").textContent="Conferir resposta";document.getElementById("checkBtn").disabled=true;let list=document.getElementById("answerList");list.innerHTML="";q.a.forEach((a,i)=>{let b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+i)+") "+a;b.onclick=()=>{if(answeredCurrent)return;selected=i;document.querySelectorAll(".answer").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");document.getElementById("checkBtn").disabled=false};list.appendChild(b)})}
-function checkAnswer(){let q=lessonQuestions[lessonIndex],fb=document.getElementById("feedback"),btn=document.getElementById("checkBtn");if(!answeredCurrent){if(selected<0)return;answeredCurrent=true;let good=selected===q.c;state.answered++;state.bySubject[q.s]??={answered:0,correct:0};state.bySubject[q.s].answered++;if(good){state.correct++;state.bySubject[q.s].correct++;state.xp+=10;state.coins+=2;fb.className="feedback show good";fb.textContent="Correto! +10 XP · "+q.x}else{state.wrong++;fb.className="feedback show bad";fb.textContent="Não foi dessa vez. "+q.x}state.history.push({subject:q.s,good:good,date:new Date().toLocaleDateString("pt-BR")});state.history=state.history.slice(-60);touchStudy();document.querySelectorAll(".answer").forEach((b,i)=>{b.disabled=true;if(i===q.c)b.classList.add("correct");if(i===selected&&selected!==q.c)b.classList.add("wrong")});btn.textContent=lessonIndex===lessonQuestions.length-1?"Finalizar":"Próxima questão";save()}else{lessonIndex++;if(lessonIndex>=lessonQuestions.length){let total=lessonQuestions.length,earned=state.history.slice(-total).filter(h=>h.good).length;if(examMode){state.xp+=50;state.coins+=15;save();showToast("Simulado concluído! +50 XP e +15 moedas");alert("SIMULADO FINALIZADO\n\nQuestões: "+total+"\nAcertos: "+earned+"\nErros: "+(total-earned)+"\nAproveitamento: "+Math.round(earned/total*100)+"%\n\nUse o desempenho por matéria para revisar seus pontos fracos.");examMode=false }else{state.lessonDone++;state.xp+=20;state.coins+=5;
+function checkAnswer(){if(lessonCompleted)return;let q=lessonQuestions[lessonIndex],fb=document.getElementById("feedback"),btn=document.getElementById("checkBtn");if(!answeredCurrent){if(selected<0)return;answeredCurrent=true;let good=selected===q.c;state.answered++;state.bySubject[q.s]??={answered:0,correct:0};state.bySubject[q.s].answered++;if(good){state.correct++;state.bySubject[q.s].correct++;state.xp+=10;state.coins+=2;fb.className="feedback show good";fb.textContent="Correto! +10 XP · "+q.x}else{state.wrong++;fb.className="feedback show bad";fb.textContent="Não foi dessa vez. "+q.x}state.history.push({subject:q.s,good:good,date:new Date().toLocaleDateString("pt-BR")});state.history=state.history.slice(-60);touchStudy();document.querySelectorAll(".answer").forEach((b,i)=>{b.disabled=true;if(i===q.c)b.classList.add("correct");if(i===selected&&selected!==q.c)b.classList.add("wrong")});btn.textContent=lessonIndex===lessonQuestions.length-1?"Finalizar":"Próxima questão";save()}else{lessonIndex++;if(lessonIndex>=lessonQuestions.length){lessonCompleted=true;btn.disabled=true;let total=lessonQuestions.length,earned=state.history.slice(-total).filter(h=>h.good).length;if(examMode){state.xp+=50;state.coins+=15;save();showToast("Simulado concluído! +50 XP e +15 moedas");alert("SIMULADO FINALIZADO\n\nQuestões: "+total+"\nAcertos: "+earned+"\nErros: "+(total-earned)+"\nAproveitamento: "+Math.round(earned/total*100)+"%\n\nUse o desempenho por matéria para revisar seus pontos fracos.");examMode=false }else{state.lessonDone++;state.xp+=20;state.coins+=5;
  if(activeMissionId&&!state.missionsDone.includes(activeMissionId)){state.missionsDone.push(activeMissionId);showToast("Fase concluída! Próxima missão desbloqueada! +20 XP");}
  else showToast("Lição concluída! +20 XP e +5 moedas");
  activeMissionId=null;save()}showView("home")}else renderQuestion()}}
@@ -315,6 +316,7 @@ function filteredRealBank(){
  return [...REAL_BANK,...IMPORTED_BANK,...ORIGINAL_BANK].filter(q=>(ex==="all"||q.exam===ex)&&(su==="all"||q.s===su));
 }
 function startRealBank(){
+ lessonCompleted=false;
  const pool=filteredRealBank();
  if(!pool.length){showToast("Não há questões para esse filtro.");return}
  examMode=false;lessonSubject="Banco de provas reais";
