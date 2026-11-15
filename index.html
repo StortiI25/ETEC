@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#58cc02">\n<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#101e22">
+<link rel="manifest" href="manifest.json">
 <title>ETEC QUEST</title>
 <style>
 :root{--green:#58cc02;--green-dark:#46a302;--ink:#263238;--muted:#718096;--line:#e5eaf0;--bg:#f7f9fc;--white:#fff;--yellow:#ffc800;--red:#ff6b6b;--blue:#1cb0f6}
@@ -102,6 +103,131 @@ footer{text-align:center;padding:18px;color:#98a2ad;font-size:12px}
 .mission-trail-nodes .question-node button{width:54px;height:54px;font-size:21px}
 .mission-trail-nodes .question-node small{font-size:10px;text-align:center;max-width:100%}
 .mission-trail-nodes .question-node em{font-size:8px;font-weight:800;letter-spacing:.2px}
+
+/* ===== ETEC QUEST: interface inspirada em trilhas de aprendizagem mobile ===== */
+:root{
+ --green:#58cc02;--green-dark:#389b00;--ink:#f4f8f8;--muted:#9aadb2;
+ --line:#304249;--bg:#101e22;--white:#1b2b30;--yellow:#ffc928;
+ --red:#ff7373;--blue:#35b9ed;--panel:#1b2b30;--panel2:#22363d;
+}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink)}
+.app{max-width:1000px;background:var(--bg)}
+.topbar{background:#142328;border-bottom:1px solid #304249;color:#fff}
+.brand-mark{border-radius:50%;box-shadow:0 4px 0 #347f0b}
+.stat b{color:#fff}.stat small{color:#91a6ad}
+.layout{grid-template-columns:190px minmax(0,1fr);gap:18px}
+.nav{color:#b6c7cb}.nav.active{background:#243b42;color:#8ce34a;box-shadow:inset 0 0 0 2px #41616a}
+.side-note,.card,.path-unit,.level-pill,.subject,.challenge-card{
+ background:var(--panel);border-color:var(--line);color:var(--ink)
+}
+.sub,.mission-info small,.path-node small,.path-node .node-status{color:var(--muted)}
+.welcome p{color:#9aadb2}
+.progress,.lesson-progress{background:#34474d}
+.metric-icon,.mission-icon{background:#293d43;color:#fff}
+.subject:hover{border-color:#5d9a45}
+.primary{background:var(--green);color:#fff;box-shadow:0 4px 0 #347f0b}
+.secondary,.answer,.avatar-choice{background:#22363d;border-color:#3a5159;color:#f3f7f7}
+.answer:hover,.answer.selected{background:#29434b;border-color:#35b9ed}
+.answer.correct{background:#203d25;border-color:#58cc02}
+.answer.wrong{background:#45282b;border-color:#ff7373}
+.feedback.good{background:#203d25;color:#9bea70}.feedback.bad{background:#45282b;color:#ffaaaa}
+.path-mascot{background:#20352b;border-color:#355b39}
+.path-mascot b{color:#a6ee7b}.path-mascot small{color:#b3c4ba}
+.path-nodes:before{border-color:#3d5b4a}
+.path-node small{color:#bdcbd0}.path-node .node-status{color:#91df60}
+.path-node button.locked,.question-node button.locked{background:#35464c;color:#819197;box-shadow:0 5px 0 #26373d;opacity:1}
+.question-node small,.question-node em{color:#a7b8bd}
+.question-node button{background:#35464c;color:#aab9be;box-shadow:0 4px 0 #26373d}
+.question-node button.current{background:var(--green);color:white;box-shadow:0 6px 0 #347f0b}
+.question-node button.completed{background:#ffc928;color:#594300;box-shadow:0 5px 0 #b88900}
+.challenge-card{background:linear-gradient(155deg,#20352b,#1b2b30);border-color:#3d6541;box-shadow:0 4px 0 #29452d}
+.challenge-card strong,.challenge-tag{color:#a4eb7a}
+.challenge-tag{background:#2c4930}
+.checkpoint{background:#20352b;border-color:#5d9d48}
+.checkpoint b{color:#a4eb7a}.checkpoint small{color:#b3c4ba}
+.challenge-locked{background:#26363b;border-color:#405057;box-shadow:0 4px 0 #1b2b30}
+.challenge-locked .challenge-tag{background:#39484d;color:#b7c3c7}
+.reward-line{background:#203d25;color:#a4eb7a}
+table td{border-color:#34474d}
+.back{background:#2b4148;color:white}
+footer{color:#71868d}
+
+/* Cabeçalho de unidade em faixa verde, como no mapa de aprendizagem da referência */
+.section-head{margin-top:28px}
+.section-head h2{color:#f3f8f8}
+.mixed-path-card{background:transparent;border:0;padding:0;overflow:visible}
+.mixed-path-card>.path-mascot{display:none}
+.mixed-path-summary{color:#dce9e8;margin:0 2px 8px}
+.unit-progress{background:#34474d}
+.unit-progress span{background:var(--green)}
+#home>.path-banner{background:var(--green);color:#fff;padding:18px 20px;border-radius:20px 20px 0 0;margin-bottom:0;box-shadow:0 5px 0 #347f0b}
+#home>.path-banner h2{color:#fff}
+#home>.path-banner .sub{color:#e3ffd4}
+#home>.section-head:nth-of-type(4){margin-top:30px}
+
+/* Trilha vertical sinuosa com nós grandes, bloqueios e recompensas */
+#missionTrailPath{padding:18px 0 28px}
+.mission-trail-nodes{display:flex;flex-direction:column;align-items:center;gap:0;position:relative;padding:4px 0 16px}
+.mission-trail-nodes:before{content:"";position:absolute;top:48px;bottom:65px;left:50%;border-left:5px dashed #344c52;transform:translateX(-50%)}
+.mission-trail-nodes .question-node{
+ width:100%;min-height:128px;display:flex;flex-direction:column;align-items:center;
+ justify-content:flex-start;gap:7px;position:relative;z-index:1;padding:0
+}
+.mission-trail-nodes .question-node:nth-child(3n+1){transform:translateX(-82px)}
+.mission-trail-nodes .question-node:nth-child(3n+2){transform:translateX(82px)}
+.mission-trail-nodes .question-node:nth-child(3n){transform:translateX(0)}
+.mission-trail-nodes .question-node button{
+ width:78px;height:78px;border-radius:50%;font-size:29px;
+ border:7px solid #263a40;outline:4px solid #344c52;
+ box-shadow:0 7px 0 #26383e
+}
+.mission-trail-nodes .question-node button.current{
+ background:var(--green);border-color:#24422b;outline-color:#4b7e35;
+ box-shadow:0 7px 0 #347f0b;transform:scale(1.06)
+}
+.mission-trail-nodes .question-node button.completed{
+ background:#ffc928;border-color:#4b4326;outline-color:#806b24;color:#594300
+}
+.mission-trail-nodes .question-node button.locked{
+ background:#35464c;border-color:#293b40;outline-color:#293b40;color:#71858b
+}
+.mission-trail-nodes .question-node small{font-size:12px;color:#d5e2e3;font-weight:900}
+.mission-trail-nodes .question-node em{font-size:9px;color:#8fa5aa;letter-spacing:.7px}
+#missionTrailProgress,#missionTrailPercent{font-weight:900;color:#b4ef8e}
+
+/* Mobile layout: navegação fixa inferior e conteúdo em tela cheia */
+@media(max-width:760px){
+ body{background:#101e22}
+ .topbar{height:76px;padding:0 16px;background:#142328}
+ .brand{font-size:17px}.brand-mark{width:34px;height:34px}
+ .stats{gap:13px}.stat{gap:4px}.stat span{font-size:17px}.stat b{font-size:14px}
+ .layout{display:block;padding:18px 16px 112px}
+ .side{position:fixed;bottom:0;left:0;right:0;background:#142328;border-top:2px solid #304249;
+  z-index:20;display:flex;flex-direction:row;justify-content:space-around;padding:9px 5px calc(9px + env(safe-area-inset-bottom));gap:2px}
+ .nav{flex:1;display:flex;flex-direction:column;gap:3px;padding:8px 2px;font-size:9px;text-align:center;border-radius:12px;color:#a9bbc0}
+ .nav .ico{font-size:21px;width:auto}
+ .nav.active{background:#263e45;color:#8de348;box-shadow:inset 0 0 0 2px #3c6976}
+ .side-note{display:none}
+ .welcome{align-items:flex-start}.welcome h1{font-size:20px}.welcome p{font-size:12px}
+ .level-pill{min-width:108px;padding:9px;background:#1b2b30;border-color:#304249}
+ .cards{gap:8px}.card{padding:12px}
+ .metric-icon{background:#293d43}.metric strong{font-size:17px}
+ .section-head{margin:23px 0 12px}
+ #home>.path-banner{margin-left:-16px;margin-right:-16px;padding:18px 20px;border-radius:18px 18px 0 0}
+ .mission-trail-nodes .question-node{min-height:126px}
+ .mission-trail-nodes .question-node:nth-child(3n+1){transform:translateX(-70px)}
+ .mission-trail-nodes .question-node:nth-child(3n+2){transform:translateX(70px)}
+ .mission-trail-nodes .question-node button{width:72px;height:72px}
+ .question-card{background:#1b2b30;border-color:#304249}
+ .badges{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:390px){
+ .mission-trail-nodes .question-node:nth-child(3n+1){transform:translateX(-55px)}
+ .mission-trail-nodes .question-node:nth-child(3n+2){transform:translateX(55px)}
+ .stats{gap:8px}
+}
+
 </style>
 </head>
 <body>
@@ -136,7 +262,7 @@ footer{text-align:center;padding:18px;color:#98a2ad;font-size:12px}
  <div class="section-head"><h2>Missões de hoje</h2><span class="sub" id="todayLabel"></span></div>
  <div class="card" id="dailyMissions"></div>
 
- <div class="section-head"><h2>🛤️ Caminho de questões</h2><span class="sub">Todas as matérias misturadas, como na prova</span></div>
+ <div class="section-head path-banner"><h2>🛤️ Caminho de questões</h2><span class="sub">Todas as matérias misturadas, como na prova</span></div>
  <div class="card mixed-path-card"><div class="path-mascot"><span class="mascot-face">🦉</span><div><b>Sua jornada até a ETEC!</b><small>Responda uma questão por vez para liberar a próxima.</small></div><span class="mascot-spark">🚀</span></div>
   <div class="mixed-path-summary"><b id="mixedPathProgress">0/0 questões concluídas</b><span id="mixedPathPercent">0%</span></div>
   <div class="unit-progress"><span id="mixedPathBar" style="width:0%"></span></div>
