@@ -61,6 +61,47 @@ footer{text-align:center;padding:18px;color:#98a2ad;font-size:12px}
 #examTimer{background:#effbe8;padding:7px 10px;border-radius:10px;font-size:13px}
 .empty{padding:12px;color:var(--muted);font-size:13px}
 @media(max-width:760px){.side{overflow-x:auto;justify-content:flex-start}.nav{min-width:68px;flex-shrink:0}}
+
+.mixed-path-card{overflow:hidden}
+.mixed-path-summary{display:flex;justify-content:space-between;gap:10px;margin:14px 0 8px;font-size:13px;font-weight:800}
+.mixed-question-path{padding:12px 2px 4px}
+.question-world{margin:14px 0 24px}
+.question-world-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.question-world-title small{color:var(--muted);font-size:11px}
+.question-nodes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px 6px;align-items:start}
+.question-node{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.question-node.offset-1{padding-top:15px}
+.question-node.offset-2{padding-top:28px}
+.question-node button{width:48px;height:48px;border-radius:50%;border:0;background:#e7edf2;color:#84909b;font-size:19px;font-weight:900;box-shadow:0 4px 0 #cbd5df;cursor:pointer}
+.question-node button.current{background:#58cc02;color:white;box-shadow:0 5px 0 #389c00;transform:scale(1.08)}
+.question-node button.completed{background:#ffc928;color:#684900;box-shadow:0 4px 0 #d9a600}
+.question-node button.locked{opacity:.7;cursor:not-allowed}
+.question-node small{font-size:11px;font-weight:900;color:var(--muted)}
+.question-node em{font-size:9px;font-style:normal;color:var(--muted);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:520px){.question-nodes{gap:10px 3px}.question-node button{width:43px;height:43px}.question-node.offset-1{padding-top:12px}.question-node.offset-2{padding-top:23px}}
+
+.challenge-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-bottom:18px}
+.challenge-card{padding:18px;border:2px solid #dce7d5;border-radius:19px;background:linear-gradient(155deg,#fff,#f5ffef);box-shadow:0 4px 0 #dce7d5;min-width:0}
+.challenge-card h3{margin:12px 0 4px;font-size:16px}.challenge-card strong{display:block;font-size:15px;color:#2d6d15}
+.challenge-card .sub{margin:9px 0;font-size:12px}.challenge-card-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.challenge-cup{font-size:32px}.challenge-tag{font-size:10px;font-weight:900;color:#3b841b;background:#e8fbdc;border-radius:20px;padding:5px 8px}
+.challenge-best{display:block;font-weight:800;font-size:12px;margin:10px 0}.challenge-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.challenge-actions button{flex:1}.challenge-pdf{display:inline-flex;align-items:center;justify-content:center;text-decoration:none!important}
+.challenge-locked{background:#f6f7f8;border-color:#e2e6e8;box-shadow:0 4px 0 #e2e6e8}.challenge-locked .challenge-tag{color:#6b7280;background:#e7eaee}
+.challenge-locked button:disabled{opacity:.55;cursor:not-allowed}
+.checkpoint{display:flex;gap:10px;align-items:center;background:#f2ffe9;border:2px dashed #86cf5c;border-radius:18px;padding:12px;margin:18px 0}
+.checkpoint-icon{font-size:30px}.checkpoint-content{flex:1;min-width:0}.checkpoint-content b{display:block;font-size:12px;color:#2c6b13}
+.checkpoint-content small{display:block;font-size:11px;color:#63726a;margin-top:4px}.checkpoint-locked{background:#f5f6f7;border-color:#cdd3d8}
+.checkpoint button:disabled{opacity:.6;cursor:not-allowed}
+.challenge-result{margin:16px 0;text-align:center}.challenge-result-hero{font-size:55px}.challenge-score{font-size:55px;font-weight:1000;color:#58cc02}
+.challenge-subject{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #e3e8e0;padding:9px 0;text-align:left}
+.reward-line{font-weight:900;color:#378b13;background:#efffe6;padding:12px;border-radius:12px}
+@media(max-width:660px){.challenge-grid{grid-template-columns:1fr}.checkpoint{flex-wrap:wrap}.checkpoint button{margin-left:auto}}
+
+.mission-trail-nodes{padding:14px 0 20px}
+.mission-trail-nodes .question-node button{width:54px;height:54px;font-size:21px}
+.mission-trail-nodes .question-node small{font-size:10px;text-align:center;max-width:100%}
+.mission-trail-nodes .question-node em{font-size:8px;font-weight:800;letter-spacing:.2px}
 </style>
 </head>
 <body>
@@ -95,6 +136,20 @@ footer{text-align:center;padding:18px;color:#98a2ad;font-size:12px}
  <div class="section-head"><h2>Missões de hoje</h2><span class="sub" id="todayLabel"></span></div>
  <div class="card" id="dailyMissions"></div>
 
+ <div class="section-head"><h2>🛤️ Caminho de questões</h2><span class="sub">Todas as matérias misturadas, como na prova</span></div>
+ <div class="card mixed-path-card"><div class="path-mascot"><span class="mascot-face">🦉</span><div><b>Sua jornada até a ETEC!</b><small>Responda uma questão por vez para liberar a próxima.</small></div><span class="mascot-spark">🚀</span></div>
+  <div class="mixed-path-summary"><b id="mixedPathProgress">0/0 questões concluídas</b><span id="mixedPathPercent">0%</span></div>
+  <div class="unit-progress"><span id="mixedPathBar" style="width:0%"></span></div>
+  <div id="mixedQuestionPath" class="mixed-question-path"></div>
+ </div>
+ <div class="section-head"><h2>🏆 Provas como desafios</h2><span class="sub">Desbloqueie no caminho misturado</span></div>
+ <div id="challengeCardsHome" class="challenge-grid"></div>
+ <div class="section-head"><h2>🧭 Caminho de missões</h2><span class="sub">Missões misturadas em sequência</span></div>
+ <div class="card mixed-path-card"><div class="path-mascot"><span class="mascot-face">🦉</span><div><b>Missões rumo à aprovação!</b><small>Conclua uma missão para desbloquear a próxima.</small></div><span class="mascot-spark">🏅</span></div>
+  <div class="mixed-path-summary"><b id="missionTrailProgress">0/10 missões concluídas</b><span id="missionTrailPercent">0%</span></div>
+  <div class="unit-progress"><span id="missionTrailBar" style="width:0%"></span></div>
+  <div id="missionTrailPath" class="mixed-question-path"></div>
+ </div>
  <div class="section-head"><h2>Trilha de missões</h2><span class="sub">Complete para avançar de fase</span></div>
  <div class="path-legend"><span><i></i> Disponível</span><span><i class="gold"></i> Concluída</span><span><i class="gray"></i> Bloqueada</span></div>
  <div id="missionPath" class="mission-path"></div>
@@ -104,6 +159,12 @@ footer{text-align:center;padding:18px;color:#98a2ad;font-size:12px}
 <section id="learn" class="view">
  <div class="section-head"><div><h1 style="margin:0 0 5px">Mapa de aprendizagem</h1><div class="sub">Escolha uma trilha e complete as lições.</div></div></div>
 
+ <div class="section-head"><h2>🛤️ Caminho de questões</h2><span class="sub">Todas as matérias misturadas, como na prova</span></div>
+ <div class="card mixed-path-card"><div class="path-mascot"><span class="mascot-face">🦉</span><div><b>Sua jornada até a ETEC!</b><small>Responda uma questão por vez para liberar a próxima.</small></div><span class="mascot-spark">🚀</span></div>
+  <div class="mixed-path-summary"><b id="mixedPathProgress">0/0 questões concluídas</b><span id="mixedPathPercent">0%</span></div>
+  <div class="unit-progress"><span id="mixedPathBar" style="width:0%"></span></div>
+  <div id="mixedQuestionPath" class="mixed-question-path"></div>
+ </div>
  <div class="section-head"><h2>Trilha de missões</h2><span class="sub">Complete para avançar de fase</span></div>
  <div class="path-legend"><span><i></i> Disponível</span><span><i class="gold"></i> Concluída</span><span><i class="gray"></i> Bloqueada</span></div>
  <div id="missionPathLearn" class="mission-path"></div>
@@ -176,6 +237,9 @@ footer{text-align:center;padding:18px;color:#98a2ad;font-size:12px}
 <section id="boss" class="view">
  <div class="section-head"><div><h1 style="margin:0 0 5px">Desafio final 👑</h1><div class="sub">Simulado de treinamento com questões disponíveis no banco. O total aumenta conforme novas questões são cadastradas.</div></div></div>
  <div class="card" style="margin-bottom:16px"><div style="font-size:38px">🏆</div><h2>Simulado ETEC</h2><p class="sub">Faça como se fosse o dia da prova: responda com atenção, confira seu resultado no final e descubra quais matérias precisam de reforço.</p><div class="cards" style="margin:15px 0 0"><div><b id="examQuestionCount">25</b><div class="sub">questões disponíveis</div></div><div><b>4h</b><div class="sub">tempo sugerido</div></div><div><b>500 XP</b><div class="sub">recompensa máxima</div></div></div><button class="primary" style="margin-top:16px" onclick="startExam()">Começar simulado</button></div>
+ <div class="section-head"><h2>📚 Desafios com provas anteriores</h2><span class="sub">Cadernos enviados por você</span></div>
+ <div id="challengeCardsBoss" class="challenge-grid"></div>
+ <div id="challengeResult" class="card challenge-result" style="display:none"></div>
  <div class="card" style="margin-bottom:14px"><h3>📈 Histórico de simulados</h3><div id="mockHistory" class="sub">Seus resultados aparecerão aqui após o primeiro simulado.</div></div>\n <div class="card"><b>Treino por dificuldade</b><p class="sub">Escolha uma fase para praticar cinco questões em sequência.</p><div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px"><button class="secondary" onclick="startLevel('Fácil')">🌱 Fácil</button><button class="secondary" onclick="startLevel('Intermediário')">⚡ Intermediário</button><button class="secondary" onclick="startLevel('Desafio')">🔥 Desafio</button></div><p class="sub" style="margin-top:12px">A classificação de dificuldade é uma trilha de treino do aplicativo, não uma classificação oficial da ETEC.</p></div>
 </section>
 <section id="profile" class="view">
@@ -251,15 +315,16 @@ const SUBJECTS=[["Matemática","🧮","#eaf5ff"],["Português","📖","#fff2df"]
 const LEVELS=["Iniciante","Aprendiz","Explorador","Estrategista","Especialista","Mestre ETEC"];
 const BADGES=[["🌱","Primeiros passos","Responda sua primeira questão",s=>s.answered>=1],["🎯","Boa mira","Acerte 10 questões",s=>s.correct>=10],["📚","Estudioso","Responda 25 questões",s=>s.answered>=25],["🔥","Em sequência","Estude em 3 dias diferentes",s=>s.studyDays.length>=3],["🏅","Quase perfeito","Alcance 80% de acertos com 10+ respostas",s=>s.answered>=10&&s.correct/s.answered>=.8],["⚡","Centenário","Conquiste 100 XP",s=>s.xp>=100]];
 const KEY="etecQuest_v1";
-function fresh(){return {xp:0,coins:0,answered:0,correct:0,wrong:0,streak:0,lastStudy:null,studyDays:[],bySubject:{},history:[],claimed:[],lessonDone:0,playerName:"Estudante",avatar:"🧑‍🎓",dailyGoal:5,wrongQuestions:[],favorites:[],mockResults:[]}}
+function fresh(){return {xp:0,coins:0,answered:0,correct:0,wrong:0,streak:0,lastStudy:null,studyDays:[],bySubject:{},history:[],claimed:[],missionsDone:[],lessonDone:0,playerName:"Estudante",avatar:"🧑‍🎓",dailyGoal:5,wrongQuestions:[],favorites:[],mockResults:[],questionPathOrder:[],questionPathDone:[],challengeResults:{},challengeRewards:[],challengeDraft:null}}
 let state;try{state={...fresh(),...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch(e){state=fresh()}
+state.missionsDone=state.missionsDone||[];
 function save(){localStorage.setItem(KEY,JSON.stringify(state));render()}
 function today(){let d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function touchStudy(){let t=today();if(state.lastStudy!==t){let y=new Date();y.setDate(y.getDate()-1);let yd=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");state.streak=state.lastStudy===yd?state.streak+1:1;state.lastStudy=t;if(!state.studyDays.includes(t))state.studyDays.push(t)}}
 function level(){return Math.min(LEVELS.length-1,Math.floor(state.xp/100))}
-function showView(v){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));document.getElementById(v).classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.view===v));if(v!=="lesson"){stopExamTimer();render()}}
+function showView(v){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));document.getElementById(v).classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.view===v));if(v!=="lesson"){if(challengeActive)challengeActive=false;stopExamTimer();render()}}
 document.querySelectorAll(".nav").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
-let lessonQuestions=[],lessonIndex=0,selected=-1,answeredCurrent=false,lessonCompleted=false,lessonSubject="",activeMissionId=null,examStartedAt=null,examTimerHandle=null,examSession=[];
+let lessonQuestions=[],lessonIndex=0,selected=-1,answeredCurrent=false,lessonCompleted=false,lessonSubject="",activeMissionId=null,examStartedAt=null,examTimerHandle=null,examSession=[],questionPathActive=false,questionPathKey=null,challengeActive=false,challengeExamId=null,challengeSession=[];
 
 const MISSION_STAGES=[
  {id:"fundamentos",name:"Fundamentos",icon:"⭐",desc:"Comece pelo básico"},
@@ -271,6 +336,190 @@ function missionUnlocked(subject,index){
  if(index===0)return true;
  return state.missionsDone.includes(missionId(subject,MISSION_STAGES[index-1].id));
 }
+
+function ensureQuestionPath(){
+ state.questionPathDone=state.questionPathDone||[];
+ const valid=new Set(BANK.map(q=>qKey(q)));
+ let order=Array.isArray(state.questionPathOrder)?state.questionPathOrder.filter(k=>valid.has(k)):[];
+ if(order.length!==BANK.length){
+  const existing=new Set(order);const rest=BANK.map(q=>qKey(q)).filter(k=>!existing.has(k));
+  for(let i=rest.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[rest[i],rest[j]]=[rest[j],rest[i]]}
+  order=order.concat(rest);
+  state.questionPathOrder=order;localStorage.setItem(KEY,JSON.stringify(state));
+ }
+ state.questionPathOrder=order;
+ state.questionPathDone=state.questionPathDone.filter(k=>valid.has(k));
+}
+
+const OFFICIAL_EXAMS=[
+ {id:"2024-2",name:"2º semestre de 2024",pdf:"ETEC_2024_2.pdf",unlock:10},
+ {id:"2025-1",name:"1º semestre de 2025",pdf:"ETEC_2025_1.pdf",unlock:20},
+ {id:"2026-1",name:"1º semestre de 2026",pdf:"ETEC_2026_1.pdf",unlock:30},
+ {id:"2026-2",name:"2º semestre de 2026",pdf:"ETEC_2026_2.pdf",unlock:40}
+];
+function officialQuestions(id){
+ return IMPORTED_BANK.filter(q=>q.exam===id).slice().sort((a,b)=>{
+  const num=q=>Number((q.origin.match(/Questão\s*(\d+)/i)||[])[1]||0);
+  return num(a)-num(b);
+ });
+}
+function medalFor(score){return score>=90?"🥇 Ouro":score>=75?"🥈 Prata":score>=60?"🥉 Bronze":"Sem medalha"}
+function challengeUnlocked(e){return (state.questionPathDone||[]).length>=e.unlock}
+function challengeCard(e){
+ const total=officialQuestions(e.id).length,unlocked=challengeUnlocked(e),result=(state.challengeResults||{})[e.id];
+ const missing=50-total;
+ const best=result?`<span class="challenge-best">${medalFor(result.best)} · Melhor: ${result.best}%</span>`:`<span class="challenge-best">Ainda não realizado</span>`;
+ return `<div class="challenge-card ${unlocked?'':'challenge-locked'}">
+  <div class="challenge-card-top"><span class="challenge-cup">${result&&result.best>=60?'🏅':unlocked?'🏆':'🔒'}</span><span class="challenge-tag">${unlocked?'DESBLOQUEADO':'LIBERA APÓS '+e.unlock+' QUESTÕES'}</span></div>
+  <h3>Vestibulinho ETEC</h3><strong>${e.name}</strong>
+  <p class="sub">${total} questões disponíveis na ordem original · 4 horas${missing?' · '+missing+' não importada(s)':''}</p>
+  ${best}
+  <div class="challenge-actions"><button class="primary" ${unlocked?`onclick="startChallenge('${e.id}')"`:'disabled'}>${!unlocked?'🔒 Bloqueado':result?'Refazer desafio':'Iniciar desafio'}</button>
+  <a href="${e.pdf}" target="_blank" rel="noopener noreferrer" class="secondary small-btn challenge-pdf">Ver prova original</a></div>
+ </div>`;
+}
+function renderChallengeCards(){
+ for(const id of ['challengeCardsHome','challengeCardsBoss']){
+  const host=document.getElementById(id);if(host)host.innerHTML=OFFICIAL_EXAMS.map(challengeCard).join('');
+ }
+}
+function challengeCheckpoint(e){
+ const unlocked=challengeUnlocked(e),result=(state.challengeResults||{})[e.id],n=officialQuestions(e.id).length;
+ return `<div class="checkpoint ${unlocked?'':'checkpoint-locked'}"><div class="checkpoint-icon">${result&&result.best>=60?'🏅':unlocked?'👑':'🔒'}</div><div class="checkpoint-content"><b>DESAFIO ESPECIAL · ${e.name}</b><small>${n} questões da prova anterior · ${result?'Melhor: '+result.best+'%':unlocked?'Disponível agora':'Desbloqueia após '+e.unlock+' questões'}</small></div><button class="primary small-btn" ${unlocked?`onclick="startChallenge('${e.id}')"`:'disabled'}>${unlocked?'Jogar':'Bloqueado'}</button></div>`;
+}
+function startChallenge(id){missionTrailActive=false;missionTrailIndex=-1;
+ const e=OFFICIAL_EXAMS.find(x=>x.id===id);
+ if(!e||!challengeUnlocked(e)){showToast('Conclua '+(e?e.unlock:10)+' questões do caminho para liberar este desafio.');return}
+ const pool=officialQuestions(id);
+ if(!pool.length){showToast('Esta prova ainda não tem questões disponíveis.');return}
+ const old=state.challengeDraft;
+ if(old&&old.id!==id&&!confirm('Existe outro desafio em andamento. Deseja começar esta prova e substituir o andamento anterior?'))return;
+ if(old&&old.id===id&&old.answers.length>=pool.length){state.challengeDraft=null}
+ let draft=state.challengeDraft;
+ if(!draft||draft.id!==id){draft={id,startedAt:Date.now(),answers:[]};state.challengeDraft=draft}
+ stopExamTimer();lessonCompleted=false;
+ if(Date.now()-draft.startedAt>=4*60*60*1000){
+  // An expired draft is scored with the answers that were already submitted.
+  challengeActive=true;challengeExamId=id;challengeSession=draft.answers;lessonQuestions=pool;examStartedAt=draft.startedAt;
+  finishChallenge(true);return;
+ }
+ challengeActive=true;challengeExamId=id;challengeSession=draft.answers.slice();
+ questionPathActive=false;questionPathKey=null;activeMissionId=null;examMode=false;lessonCompleted=false;
+ lessonSubject='Prova ETEC · '+e.name;lessonQuestions=pool;lessonIndex=challengeSession.length;examStartedAt=draft.startedAt;
+ localStorage.setItem(KEY,JSON.stringify(state));showView('lesson');renderQuestion();startExamTimer();
+}
+function handleChallengeAnswer(){
+ if(!challengeActive||lessonCompleted||answeredCurrent||selected<0)return;
+ const q=lessonQuestions[lessonIndex];answeredCurrent=true;
+ const item={key:qKey(q),subject:q.s,selected,good:selected===q.c};
+ challengeSession.push(item);
+ state.challengeDraft={id:challengeExamId,startedAt:examStartedAt,answers:challengeSession.slice()};
+ localStorage.setItem(KEY,JSON.stringify(state));
+ if(challengeSession.length>=lessonQuestions.length){finishChallenge(false)}
+ else{lessonIndex=challengeSession.length;renderQuestion()}
+}
+function finishChallenge(expired){
+ if(lessonCompleted)return;
+ lessonCompleted=true;stopExamTimer();
+ const id=challengeExamId,e=OFFICIAL_EXAMS.find(x=>x.id===id),total=lessonQuestions.length;
+ const answers=challengeSession.slice(0,total),correct=answers.filter(a=>a.good).length;
+ const pct=Math.round(100*correct/total),old=(state.challengeResults||{})[id];
+ const best=Math.max(old?old.best:0,pct);
+ state.challengeResults=state.challengeResults||{};
+ state.challengeResults[id]={best,attempts:(old?old.attempts:0)+1,last:pct,lastCorrect:correct,lastAnswered:answers.length,lastDate:new Date().toLocaleDateString('pt-BR')};
+ state.challengeRewards=state.challengeRewards||[];
+ const firstMedal=pct>=60&&!state.challengeRewards.includes(id);
+ if(firstMedal){state.challengeRewards.push(id);state.xp+=100;state.coins+=20}
+ // Commit the attempt exactly once, including answers that need review.
+ state.wrongQuestions=state.wrongQuestions||[];
+ for(const a of answers){
+  state.answered++;state.bySubject[a.subject]??={answered:0,correct:0};state.bySubject[a.subject].answered++;
+  if(a.good){state.correct++;state.bySubject[a.subject].correct++;const i=state.wrongQuestions.indexOf(a.key);if(i>=0)state.wrongQuestions.splice(i,1)}
+  else{state.wrong++;if(!state.wrongQuestions.includes(a.key))state.wrongQuestions.push(a.key)}
+  state.history.push({subject:a.subject,good:a.good,date:new Date().toLocaleDateString('pt-BR'),questionKey:a.key});
+ }
+ state.history=state.history.slice(-60);if(answers.length)touchStudy();
+ state.challengeDraft=null;challengeActive=false;challengeExamId=null;challengeSession=[];
+ localStorage.setItem(KEY,JSON.stringify(state));showView('boss');
+ const bySubject={};for(const a of answers){bySubject[a.subject]??={total:0,correct:0};bySubject[a.subject].total++;if(a.good)bySubject[a.subject].correct++}
+ const summary=Object.entries(bySubject).map(([s,v])=>`<div class="challenge-subject"><span>${s}</span><b>${v.correct}/${v.total} · ${Math.round(100*v.correct/v.total)}%</b></div>`).join('');
+ const host=document.getElementById('challengeResult');
+ host.style.display='block';
+ host.innerHTML=`<div class="challenge-result-hero">${pct>=90?'🥇':pct>=75?'🥈':pct>=60?'🥉':'📖'}</div><h2>Resultado · ${e.name}</h2><div class="challenge-score">${pct}%</div><p>${correct} acertos em ${total} questões disponíveis · ${answers.length} respondidas${expired?' · Tempo encerrado':''}</p><h3>${medalFor(pct)}</h3>${firstMedal?'<p class="reward-line">🎁 Primeira medalha: +100 XP e +20 moedas!</p>':''}<h3>Desempenho por matéria</h3>${summary||'<p>Nenhuma resposta registrada.</p>'}<p class="sub">As questões não importadas não foram incluídas na pontuação. Veja o PDF para consultar a prova completa.</p><button class="primary" onclick="startChallenge('${id}')">Tentar novamente</button>`;
+ host.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderQuestionPath(){
+ const host=document.getElementById("mixedQuestionPath");if(!host)return;
+ ensureQuestionPath();
+ const order=state.questionPathOrder,done=state.questionPathDone,completed=done.length;
+ const pct=order.length?Math.round(completed/order.length*100):0;
+ document.getElementById("mixedPathProgress").textContent=completed+"/"+order.length+" questões concluídas";
+ document.getElementById("mixedPathPercent").textContent=pct+"%";
+ document.getElementById("mixedPathBar").style.width=pct+"%";
+ const next=order.findIndex(k=>!done.includes(k));
+ const chunks=[];
+ for(let start=0;start<order.length;start+=10){
+  const chunk=order.slice(start,start+10),world=Math.floor(start/10)+1;
+  chunks.push(`<div class="question-world"><div class="question-world-title"><b>🌎 Etapa ${world}</b><small>${Math.min(start+10,order.length)} questões no caminho</small></div><div class="question-nodes">${chunk.map((key,j)=>{
+   const index=start+j,isDone=done.includes(key),isNext=index===next,locked=index>next;
+   const q=BANK.find(x=>qKey(x)===key),symbol=isDone?"✓":isNext?"★":"🔒";
+   const offset=[0,1,2,1,0,1,2,1,0,1][j];
+   return `<div class="question-node offset-${offset}"><button class="${isDone?"completed":isNext?"current":"locked"}" ${isNext?`onclick="startQuestionPath(${index})"`:"disabled"} title="${isDone?"Questão concluída":isNext?"Continuar caminho":"Conclua a questão anterior"}">${symbol}</button><small>${index+1}</small><em>${q?q.s:""}</em></div>`;
+  }).join("")}</div></div>`);
+  const checkpoint=OFFICIAL_EXAMS.find(e=>e.unlock===start+chunk.length);
+  if(checkpoint)chunks.push(challengeCheckpoint(checkpoint));
+ }
+ host.innerHTML=chunks.join("")||"<p>Carregando caminho de questões…</p>";
+}
+function startQuestionPath(index){missionTrailActive=false;missionTrailIndex=-1;
+ ensureQuestionPath();
+ const key=state.questionPathOrder[index];
+ if(!key||state.questionPathDone.includes(key))return;
+ const firstPending=state.questionPathOrder.findIndex(k=>!state.questionPathDone.includes(k));
+ if(index!==firstPending){showToast("Conclua a questão anterior para liberar esta.");return}
+ const q=BANK.find(x=>qKey(x)===key);if(!q)return;
+ stopExamTimer();lessonCompleted=false;activeMissionId=null;examMode=false;
+ questionPathActive=true;questionPathKey=key;lessonSubject="Caminho de questões";
+ lessonQuestions=[q];lessonIndex=0;showView("lesson");renderQuestion();
+}
+
+const MISSION_TRAIL=[
+ ["Primeiros passos","🟢","Aqueça com questões variadas"],
+ ["Leitura atenta","📚","Interpretação e compreensão"],
+ ["Raciocínio rápido","🧠","Use a lógica para resolver"],
+ ["Explorador da natureza","🔬","Ciências e meio ambiente"],
+ ["Brasil e sociedade","🌎","História e Geografia"],
+ ["Matemática na prática","🧮","Números, medidas e problemas"],
+ ["Desafio de linguagem","✍️","Leia, interprete e conclua"],
+ ["Conhecimento geral","💡","Misture diferentes conteúdos"],
+ ["Preparação avançada","🔥","Questões para testar seu preparo"],
+ ["Missão final","🏆","Desafio misto antes das provas"]
+];
+function renderMissionTrail(){
+ const host=document.getElementById("missionTrailPath");if(!host)return;
+ state.missionTrailDone=state.missionTrailDone||[];
+ const done=state.missionTrailDone,first=MISSION_TRAIL.findIndex((_,i)=>!done.includes(i));
+ const pct=Math.round(done.length/MISSION_TRAIL.length*100);
+ document.getElementById("missionTrailProgress").textContent=done.length+"/10 missões concluídas";
+ document.getElementById("missionTrailPercent").textContent=pct+"%";
+ document.getElementById("missionTrailBar").style.width=pct+"%";
+ host.innerHTML=`<div class="question-nodes mission-trail-nodes">${MISSION_TRAIL.map((m,i)=>{
+  const complete=done.includes(i),unlocked=i===first||complete,offset=[0,1,2,1,0,1,2,1,0,1][i];
+  return `<div class="question-node offset-${offset}"><button class="${complete?"completed":unlocked?"current":"locked"}" ${unlocked&&!complete?`onclick="startMissionTrail(${i})"`:"disabled"} title="${complete?"Missão concluída":unlocked?"Iniciar missão":"Conclua a missão anterior"}">${complete?"✓":m[1]}</button><small>${i+1}. ${m[0]}</small><em>${complete?"CONCLUÍDA":unlocked?"DISPONÍVEL":"BLOQUEADA"}</em></div>`;
+ }).join("")}</div>`;
+}
+function startMissionTrail(index){
+ state.missionTrailDone=state.missionTrailDone||[];
+ const first=MISSION_TRAIL.findIndex((_,i)=>!state.missionTrailDone.includes(i));
+ if(index!==first||index<0||index>=MISSION_TRAIL.length){showToast("Conclua a missão anterior para desbloquear esta.");return}
+ const pool=[...BANK].sort(()=>Math.random()-.5).slice(0,5);
+ if(!pool.length)return;
+ stopExamTimer();lessonCompleted=false;activeMissionId=null;examMode=false;challengeActive=false;questionPathActive=false;
+ missionTrailActive=true;missionTrailIndex=index;lessonSubject="Missão "+(index+1)+" · "+MISSION_TRAIL[index][0];
+ lessonQuestions=pool;lessonIndex=0;showView("lesson");renderQuestion();
+}
+let missionTrailActive=false,missionTrailIndex=-1;
 function renderMissionPath(){
  const hosts=[document.getElementById("missionPath"),document.getElementById("missionPathLearn")].filter(Boolean);if(!hosts.length)return;
  const markup=SUBJECTS.map((s,si)=>{
@@ -281,7 +530,7 @@ function renderMissionPath(){
   }).join("")}</div><div class="unit-progress"><span style="width:${done/3*100}%"></span></div></div>`;
  }).join("");hosts.forEach(host=>host.innerHTML=markup);
 }
-function startMission(subject,index){
+function startMission(subject,index){missionTrailActive=false;missionTrailIndex=-1;challengeActive=false;
  lessonCompleted=false;
  if(!missionUnlocked(subject,index)){showToast("Complete a fase anterior para desbloquear esta missão.");return}
  const pool=BANK.filter(q=>q.s===subject);
@@ -292,10 +541,10 @@ function startMission(subject,index){
  lessonIndex=0;showView("lesson");renderQuestion();
 }
 
-function startLesson(subject){stopExamTimer();lessonCompleted=false;activeMissionId=null;examMode=false;lessonSubject=subject;let pool=subject==="Todas"?[...BANK]:BANK.filter(q=>q.s===subject);lessonQuestions=pool.sort(()=>Math.random()-.5).slice(0,5);lessonIndex=0;showView("lesson");renderQuestion()}
+function startLesson(subject){missionTrailActive=false;missionTrailIndex=-1;challengeActive=false;questionPathActive=false;questionPathKey=null;stopExamTimer();lessonCompleted=false;activeMissionId=null;examMode=false;lessonSubject=subject;let pool=subject==="Todas"?[...BANK]:BANK.filter(q=>q.s===subject);lessonQuestions=pool.sort(()=>Math.random()-.5).slice(0,5);lessonIndex=0;showView("lesson");renderQuestion()}
 let examMode=false;
-function startLevel(levelName){stopExamTimer();lessonCompleted=false;activeMissionId=null;examMode=false;let groups={"Fácil":BANK.slice(0,17),"Intermediário":BANK.slice(17,34),"Desafio":BANK.slice(34)};let pool=groups[levelName]||BANK;lessonSubject=levelName;lessonQuestions=[...pool].sort(()=>Math.random()-.5).slice(0,5);lessonIndex=0;showView("lesson");renderQuestion()}
-function startExam(){stopExamTimer();lessonCompleted=false;activeMissionId=null;examMode=true;examSession=[];lessonSubject="Simulado ETEC";lessonQuestions=[...BANK].sort(()=>Math.random()-.5).slice(0,Math.min(50,BANK.length));lessonIndex=0;examStartedAt=Date.now();showView("lesson");renderQuestion();startExamTimer()}
+function startLevel(levelName){missionTrailActive=false;missionTrailIndex=-1;challengeActive=false;questionPathActive=false;questionPathKey=null;stopExamTimer();lessonCompleted=false;activeMissionId=null;examMode=false;let groups={"Fácil":BANK.slice(0,17),"Intermediário":BANK.slice(17,34),"Desafio":BANK.slice(34)};let pool=groups[levelName]||BANK;lessonSubject=levelName;lessonQuestions=[...pool].sort(()=>Math.random()-.5).slice(0,5);lessonIndex=0;showView("lesson");renderQuestion()}
+function startExam(){missionTrailActive=false;missionTrailIndex=-1;challengeActive=false;questionPathActive=false;questionPathKey=null;stopExamTimer();lessonCompleted=false;activeMissionId=null;examMode=true;examSession=[];lessonSubject="Simulado ETEC";lessonQuestions=[...BANK].sort(()=>Math.random()-.5).slice(0,Math.min(50,BANK.length));lessonIndex=0;examStartedAt=Date.now();showView("lesson");renderQuestion();startExamTimer()}
 
 
 function qKey(q){return q.origin||q.q}
@@ -305,7 +554,7 @@ function renderReviewPanel(){
  const panel=document.getElementById("reviewPanel");
  if(panel)panel.innerHTML=wrong.length?`<b>${wrong.length} questão(ões) para revisar</b><p class="sub">Faça uma nova tentativa e acerte para limpar a pendência.</p>`:"<div class='empty'>Nenhuma questão pendente. Excelente trabalho! 🎉</div>";
 }
-function startReview(){
+function startReview(){challengeActive=false;
  stopExamTimer();const keys=state.wrongQuestions||[],pool=BANK.filter(q=>keys.includes(qKey(q)));
  if(!pool.length){showToast("Não há questões pendentes. Muito bem!");return}
  lessonCompleted=false;activeMissionId=null;examMode=false;lessonSubject="Revisão inteligente";lessonQuestions=[...pool].sort(()=>Math.random()-.5).slice(0,10);lessonIndex=0;showView("lesson");renderQuestion();
@@ -335,6 +584,7 @@ function startExamTimer(){
 }
 function stopExamTimer(){if(examTimerHandle){clearInterval(examTimerHandle);examTimerHandle=null}const el=document.getElementById("examTimer");if(el)el.style.display="none"}
 function finishExamByTime(){
+ if(challengeActive){finishChallenge(true);return}
  if(!examMode||lessonCompleted)return;lessonCompleted=true;examMode=false;
  const total=examSession.length,correct=examSession.filter(x=>x.good).length;
  state.mockResults=state.mockResults||[];state.mockResults.push({date:new Date().toLocaleString("pt-BR"),total,correct,percent:total?Math.round(correct/total*100):0,duration:240});state.mockResults=state.mockResults.slice(-20);
@@ -350,24 +600,30 @@ function importProgress(event){
  const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result),incoming=data.state||data;if(!incoming||!Number.isFinite(incoming.xp))throw new Error("invalid");if(!confirm("Importar este backup e substituir o progresso atual?"))return;state={...fresh(),...incoming};save();showToast("Backup importado!")}catch(e){alert("Arquivo de backup inválido.")}};
  reader.readAsText(file);event.target.value="";
 }
-function renderQuestion(){let q=lessonQuestions[lessonIndex];selected=-1;answeredCurrent=false;document.getElementById("qSubject").textContent=q.s.toUpperCase()+" · "+(q.origin||"TREINAMENTO");document.getElementById("qText").textContent=q.q;document.getElementById("lessonCount").textContent=(lessonIndex+1)+"/"+lessonQuestions.length;document.getElementById("lessonBar").style.width=(lessonIndex/lessonQuestions.length*100)+"%";document.getElementById("feedback").className="feedback";document.getElementById("feedback").textContent="";document.getElementById("checkBtn").textContent="Conferir resposta";document.getElementById("checkBtn").disabled=true;updateFavoriteButton();let list=document.getElementById("answerList");list.innerHTML="";q.a.forEach((a,i)=>{let b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+i)+") "+a;b.onclick=()=>{if(answeredCurrent)return;selected=i;document.querySelectorAll(".answer").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");document.getElementById("checkBtn").disabled=false};list.appendChild(b)})}
-function checkAnswer(){if(lessonCompleted)return;let q=lessonQuestions[lessonIndex],fb=document.getElementById("feedback"),btn=document.getElementById("checkBtn");if(!answeredCurrent){if(selected<0)return;answeredCurrent=true;let good=selected===q.c;state.answered++;state.bySubject[q.s]??={answered:0,correct:0};state.bySubject[q.s].answered++;if(good){state.correct++;state.bySubject[q.s].correct++;state.xp+=10;state.coins+=2;fb.className="feedback show good";fb.textContent="Correto! +10 XP · "+q.x}else{state.wrong++;fb.className="feedback show bad";fb.textContent="Não foi dessa vez. "+q.x}state.history.push({subject:q.s,good:good,date:new Date().toLocaleDateString("pt-BR"),questionKey:qKey(q)});
+function renderQuestion(){let q=lessonQuestions[lessonIndex];selected=-1;answeredCurrent=false;document.getElementById("qSubject").textContent=q.s.toUpperCase()+" · "+(q.origin||"TREINAMENTO");document.getElementById("qText").textContent=q.q;document.getElementById("lessonCount").textContent=(lessonIndex+1)+"/"+lessonQuestions.length;document.getElementById("lessonBar").style.width=(lessonIndex/lessonQuestions.length*100)+"%";document.getElementById("feedback").className="feedback";document.getElementById("feedback").textContent="";document.getElementById("checkBtn").textContent=challengeActive?(lessonIndex===lessonQuestions.length-1?"Finalizar desafio":"Confirmar e continuar"):"Conferir resposta";document.getElementById("checkBtn").disabled=true;updateFavoriteButton();document.getElementById("favoriteBtn").style.display=challengeActive?"none":"";
+if(challengeActive){document.getElementById("feedback").className="feedback show";document.getElementById("feedback").textContent="Modo prova: o gabarito será mostrado somente no resultado."}
+let list=document.getElementById("answerList");list.innerHTML="";q.a.forEach((a,i)=>{let b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+i)+") "+a;b.onclick=()=>{if(answeredCurrent)return;selected=i;document.querySelectorAll(".answer").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");document.getElementById("checkBtn").disabled=false};list.appendChild(b)})}
+function checkAnswer(){if(challengeActive){handleChallengeAnswer();return}if(lessonCompleted)return;let q=lessonQuestions[lessonIndex],fb=document.getElementById("feedback"),btn=document.getElementById("checkBtn");if(!answeredCurrent){if(selected<0)return;answeredCurrent=true;let good=selected===q.c;state.answered++;state.bySubject[q.s]??={answered:0,correct:0};state.bySubject[q.s].answered++;if(good){state.correct++;state.bySubject[q.s].correct++;state.xp+=10;state.coins+=2;fb.className="feedback show good";fb.textContent="Correto! +10 XP · "+q.x}else{state.wrong++;fb.className="feedback show bad";fb.textContent="Não foi dessa vez. "+q.x}state.history.push({subject:q.s,good:good,date:new Date().toLocaleDateString("pt-BR"),questionKey:qKey(q)});
  state.wrongQuestions=state.wrongQuestions||[];const k=qKey(q),ri=state.wrongQuestions.indexOf(k);
  if(!good&&ri<0)state.wrongQuestions.push(k);if(good&&ri>=0)state.wrongQuestions.splice(ri,1);
- if(examMode)examSession.push({good,subject:q.s});state.history=state.history.slice(-60);touchStudy();document.querySelectorAll(".answer").forEach((b,i)=>{b.disabled=true;if(i===q.c)b.classList.add("correct");if(i===selected&&selected!==q.c)b.classList.add("wrong")});btn.textContent=lessonIndex===lessonQuestions.length-1?"Finalizar":"Próxima questão";save()}else{lessonIndex++;if(lessonIndex>=lessonQuestions.length){lessonCompleted=true;btn.disabled=true;stopExamTimer();let total=lessonQuestions.length,earned=state.history.slice(-total).filter(h=>h.good).length;if(examMode){state.mockResults=state.mockResults||[];state.mockResults.push({date:new Date().toLocaleString("pt-BR"),total,correct:earned,percent:Math.round(earned/total*100),duration:examStartedAt?Math.round((Date.now()-examStartedAt)/60000):0});state.mockResults=state.mockResults.slice(-20);state.xp+=50;state.coins+=15;save();showToast("Simulado concluído! +50 XP e +15 moedas");alert("SIMULADO FINALIZADO\n\nQuestões: "+total+"\nAcertos: "+earned+"\nErros: "+(total-earned)+"\nAproveitamento: "+Math.round(earned/total*100)+"%");examMode=false }else{state.lessonDone++;state.xp+=20;state.coins+=5;
+ if(examMode)examSession.push({good,subject:q.s});state.history=state.history.slice(-60);touchStudy();document.querySelectorAll(".answer").forEach((b,i)=>{b.disabled=true;if(i===q.c)b.classList.add("correct");if(i===selected&&selected!==q.c)b.classList.add("wrong")});btn.textContent=questionPathActive?(good?"Continuar caminho":"Tentar novamente"):(lessonIndex===lessonQuestions.length-1?"Finalizar":"Próxima questão");save()}else{
+ if(questionPathActive){
+  const q=lessonQuestions[0],key=questionPathKey;
+  if(!state.history.length || state.history[state.history.length-1].questionKey!==key || !state.history[state.history.length-1].good){
+   questionPathActive=false;questionPathKey=null;renderQuestion();showToast("Tente novamente para liberar a próxima questão.");return;
+  }
+  state.questionPathDone=state.questionPathDone||[];
+  if(!state.questionPathDone.includes(key)){state.questionPathDone.push(key);state.xp+=5;state.coins+=1;save()}
+  questionPathActive=false;questionPathKey=null;showToast("Questão concluída! +5 XP bônus. Próxima liberada!");
+  showView("home");return;
+ }
+ lessonIndex++;if(lessonIndex>=lessonQuestions.length){lessonCompleted=true;btn.disabled=true;stopExamTimer();
+ if(missionTrailActive){state.missionTrailDone=state.missionTrailDone||[];if(!state.missionTrailDone.includes(missionTrailIndex)){state.missionTrailDone.push(missionTrailIndex);state.xp+=25;state.coins+=5;save()}missionTrailActive=false;missionTrailIndex=-1;showToast("Missão concluída! +25 XP e +5 moedas. Próxima missão liberada!");showView("home");return}
+ let total=lessonQuestions.length,earned=state.history.slice(-total).filter(h=>h.good).length;if(examMode){state.mockResults=state.mockResults||[];state.mockResults.push({date:new Date().toLocaleString("pt-BR"),total,correct:earned,percent:Math.round(earned/total*100),duration:examStartedAt?Math.round((Date.now()-examStartedAt)/60000):0});state.mockResults=state.mockResults.slice(-20);state.xp+=50;state.coins+=15;save();showToast("Simulado concluído! +50 XP e +15 moedas");alert("SIMULADO FINALIZADO\n\nQuestões: "+total+"\nAcertos: "+earned+"\nErros: "+(total-earned)+"\nAproveitamento: "+Math.round(earned/total*100)+"%");examMode=false }else{state.lessonDone++;state.xp+=20;state.coins+=5;
  if(activeMissionId&&!state.missionsDone.includes(activeMissionId)){state.missionsDone.push(activeMissionId);showToast("Fase concluída! Próxima missão desbloqueada! +20 XP");}
  else showToast("Lição concluída! +20 XP e +5 moedas");
  activeMissionId=null;save()}showView("home")}else renderQuestion()}}
 function subjectCard(s){let count=BANK.filter(q=>q.s===s[0]).length;let st=state.bySubject[s[0]]||{answered:0,correct:0};return `<div class="subject" onclick="startLesson('${s[0]}')"><div class="subject-icon" style="background:${s[2]}">${s[1]}</div><div><h3>${s[0]}</h3><p>${st.correct||0} acertos · ${count} questões disponíveis</p></div><span class="arrow">›</span></div>`}
-function render(){let xp=state.xp,lv=level(),rem=xp%100;document.getElementById("xpTop").textContent=xp;document.getElementById("coinsTop").textContent=state.coins;document.getElementById("streakTop").textContent=state.streak;let examCount=document.getElementById("examQuestionCount");if(examCount)examCount.textContent=BANK.length;document.getElementById("xpMetric").textContent=xp;document.getElementById("levelName").textContent="Nível "+(lv+1)+" · "+LEVELS[lv];document.getElementById("levelBar").style.width=rem+"%";document.getElementById("levelText").textContent=rem+" / 100 XP para o próximo nível";document.getElementById("accuracyMetric").textContent=state.answered?Math.round(state.correct/state.answered*100)+"%":"—";document.getElementById("doneMetric").textContent=state.answered;document.getElementById("correctMetric").textContent=state.correct;document.getElementById("wrongMetric").textContent=state.wrong;document.getElementById("streakMetric").textContent=state.streak;document.getElementById("todayLabel").textContent=new Date().toLocaleDateString("pt-BR",{day:"2-digit",month:"short"});
- document.getElementById("subjectGrid").innerHTML=SUBJECTS.map(subjectCard).join("");document.getElementById("subjectGrid2").innerHTML=SUBJECTS.map(subjectCard).join("");renderMissionPath();
- let missions=[["Responder 5 questões",""+Math.min(5,state.answered)+" / 5",state.answered>=5,"📝"],["Conquistar 30 XP",""+Math.min(30,state.xp)+" / 30 XP",state.xp>=30,"⚡"],["Acertar 3 questões",""+Math.min(3,state.correct)+" / 3",state.correct>=3,"🎯"]];
- document.getElementById("dailyMissions").innerHTML=missions.map(m=>`<div class="mission" style="margin:9px 0"><div class="mission-icon">${m[3]}</div><div class="mission-info"><strong>${m[0]}</strong><small>${m[1]} ${m[2]?"· Concluída":""}</small></div><div class="reward">${m[2]?"✓":"+"+(m[0].includes("XP")?"10":"5")+" XP"}</div></div>`).join("");
- document.getElementById("subjectStats").innerHTML=SUBJECTS.map(s=>{let v=state.bySubject[s[0]]||{answered:0,correct:0},p=v.answered?Math.round(v.correct/v.answered*100):0;return `<div style="margin:14px 0"><div style="display:flex;justify-content:space-between"><b>${s[1]} ${s[0]}</b><span class="sub">${v.correct}/${v.answered} acertos · ${p}%</span></div><div class="progress"><span style="width:${p}%"></span></div></div>`}).join("");
- document.getElementById("history").innerHTML=state.history.length?state.history.slice(-8).reverse().map(h=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)"><span>${h.good?"✅":"❌"} ${h.subject}</span><span class="sub">${h.good?"+10 XP":"Revisar"} · ${h.date}</span></div>`).join(""):"<div class='empty'>Suas respostas aparecerão aqui.</div>";
- document.getElementById("badgeGrid").innerHTML=BADGES.map(b=>{let earned=b[3](state);return `<div class="card badge-card ${earned?"":"locked"}"><div class="badge-icon">${b[0]}</div><strong>${b[1]}</strong><small>${earned?"Desbloqueada":b[2]}</small></div>`}).join("");
- document.getElementById("shop").innerHTML=`<div class="mission"><div class="mission-icon">☕</div><div class="mission-info"><strong>Pausa merecida</strong><small>Uma pausa de 15 minutos depois de estudar.</small></div><button class="secondary small-btn" onclick="buyReward(20)">20 🪙</button></div><div class="mission"><div class="mission-icon">🎬</div><div class="mission-info"><strong>Tempo de lazer</strong><small>30 minutos de lazer sem culpa.</small></div><button class="secondary small-btn" onclick="buyReward(40)">40 🪙</button></div>`;
-}
 function buyReward(n){if(state.coins<n){showToast("Você ainda não tem moedas suficientes.");return}state.coins-=n;save();showToast("Recompensa resgatada! Aproveite.");}
 function resetProgress(){if(confirm("Tem certeza? Todo o XP, moedas e histórico deste dispositivo serão apagados.")){state=fresh();save();showToast("Progresso reiniciado.")}}
 function showToast(t){let el=document.getElementById("toast");el.textContent=t;el.style.display="block";setTimeout(()=>el.style.display="none",2400)}
@@ -375,14 +631,14 @@ function saveProfile(){state.playerName=document.getElementById("nameInput").val
 function chooseAvatar(a){state.avatar=a;document.querySelectorAll(".avatar-choice").forEach(b=>b.classList.toggle("selected",b.textContent===a));document.getElementById("avatarPreview").textContent=a}
 function saveGoal(){state.dailyGoal=Number(document.getElementById("goalSelect").value);save();showToast("Meta diária atualizada!")}
 function renderCalendar(){let d=new Date(),year=d.getFullYear(),month=d.getMonth(),first=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate(),names=["D","S","T","Q","Q","S","S"],out='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center">';names.forEach(n=>out+='<b class="sub" style="padding:5px">'+n+'</b>');for(let i=0;i<first;i++)out+='<span></span>';for(let n=1;n<=days;n++){let key=year+"-"+String(month+1).padStart(2,"0")+"-"+String(n).padStart(2,"0"),done=state.studyDays.includes(key);out+='<span style="padding:8px 2px;border-radius:9px;background:'+(done?'#dff6cf':'#f3f5f7')+';color:'+(done?'#398900':'#64748b')+';font-weight:800">'+n+(done?' ✓':'')+'</span>'}out+='</div>';document.getElementById("calendar").innerHTML='<b style="display:block;text-align:center;margin-bottom:8px">'+d.toLocaleDateString("pt-BR",{month:"long",year:"numeric"})+'</b>'+out}
-function render(){let xp=state.xp,lv=level(),rem=xp%100;document.getElementById("xpTop").textContent=xp;document.getElementById("coinsTop").textContent=state.coins;document.getElementById("streakTop").textContent=state.streak;let examCount=document.getElementById("examQuestionCount");if(examCount)examCount.textContent=BANK.length;document.getElementById("xpMetric").textContent=xp;document.getElementById("levelName").textContent="Nível "+(lv+1)+" · "+LEVELS[lv];document.getElementById("levelBar").style.width=rem+"%";document.getElementById("levelText").textContent=rem+" / 100 XP para o próximo nível";document.getElementById("accuracyMetric").textContent=state.answered?Math.round(state.correct/state.answered*100)+"%":"—";document.getElementById("doneMetric").textContent=state.answered;document.getElementById("correctMetric").textContent=state.correct;document.getElementById("wrongMetric").textContent=state.wrong;document.getElementById("streakMetric").textContent=state.streak;document.getElementById("todayLabel").textContent=new Date().toLocaleDateString("pt-BR",{day:"2-digit",month:"short"});document.querySelector(".welcome h1").textContent="Olá, "+(state.playerName||"estudante")+"! 👋";document.getElementById("subjectGrid").innerHTML=SUBJECTS.map(subjectCard).join("");document.getElementById("subjectGrid2").innerHTML=SUBJECTS.map(subjectCard).join("");renderMissionPath();let goal=state.dailyGoal||5,doneToday=state.history.filter(h=>h.date===new Date().toLocaleDateString("pt-BR")).length;let missions=[["Responder questões de hoje",Math.min(goal,doneToday)+" / "+goal,doneToday>=goal,"📝"],["Conquistar 30 XP",Math.min(30,state.xp)+" / 30 XP",state.xp>=30,"⚡"],["Acertar 3 questões",Math.min(3,state.correct)+" / 3",state.correct>=3,"🎯"]];document.getElementById("dailyMissions").innerHTML=missions.map(m=>`<div class="mission" style="margin:9px 0"><div class="mission-icon">${m[3]}</div><div class="mission-info"><strong>${m[0]}</strong><small>${m[1]} ${m[2]?"· Concluída":""}</small></div><div class="reward">${m[2]?"✓":"Missão"}</div></div>`).join("");document.getElementById("subjectStats").innerHTML=SUBJECTS.map(s=>{let v=state.bySubject[s[0]]||{answered:0,correct:0},p=v.answered?Math.round(v.correct/v.answered*100):0;return `<div style="margin:14px 0"><div style="display:flex;justify-content:space-between"><b>${s[1]} ${s[0]}</b><span class="sub">${v.correct}/${v.answered} acertos · ${p}%</span></div><div class="progress"><span style="width:${p}%"></span></div></div>`}).join("");document.getElementById("history").innerHTML=state.history.length?state.history.slice(-8).reverse().map(h=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)"><span>${h.good?"✅":"❌"} ${h.subject}</span><span class="sub">${h.good?"+10 XP":"Revisar"} · ${h.date}</span></div>`).join(""):"<div class='empty'>Suas respostas aparecerão aqui.</div>";document.getElementById("badgeGrid").innerHTML=BADGES.map(b=>{let earned=b[3](state);return `<div class="card badge-card ${earned?"":"locked"}"><div class="badge-icon">${b[0]}</div><strong>${b[1]}</strong><small>${earned?"Desbloqueada":b[2]}</small></div>`}).join("");document.getElementById("shop").innerHTML=`<div class="mission"><div class="mission-icon">☕</div><div class="mission-info"><strong>Pausa merecida</strong><small>Uma pausa de 15 minutos depois de estudar.</small></div><button class="secondary small-btn" onclick="buyReward(20)">20 🪙</button></div><div class="mission"><div class="mission-icon">🎬</div><div class="mission-info"><strong>Tempo de lazer</strong><small>30 minutos de lazer sem culpa.</small></div><button class="secondary small-btn" onclick="buyReward(40)">40 🪙</button></div>`;document.getElementById("profileName").textContent=state.playerName||"Estudante";document.getElementById("profileLevel").textContent="Nível "+(lv+1)+" · "+LEVELS[lv];document.getElementById("avatarPreview").textContent=state.avatar||"🧑‍🎓";document.getElementById("nameInput").value=state.playerName||"";document.getElementById("goalSelect").value=String(state.dailyGoal||5);let av=["🧑‍🎓","🦊","🐼","🐯","🐸","🐙","🦉","🐲"];document.getElementById("avatarChoices").innerHTML=av.map(a=>`<button class="avatar-choice ${a===(state.avatar||"🧑‍🎓")?"selected":""}" onclick="chooseAvatar('${a}')">${a}</button>`).join("");renderCalendar();renderReviewPanel();const mh=document.getElementById("mockHistory");if(mh){const rows=(state.mockResults||[]).slice(-5).reverse();mh.innerHTML=rows.length?rows.map(r=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)"><span>${r.date}</span><b>${r.correct}/${r.total} · ${r.percent}%</b></div>`).join(""):"Seus resultados aparecerão aqui após o primeiro simulado."}}
+function render(){let xp=state.xp,lv=level(),rem=xp%100;document.getElementById("xpTop").textContent=xp;document.getElementById("coinsTop").textContent=state.coins;document.getElementById("streakTop").textContent=state.streak;let examCount=document.getElementById("examQuestionCount");if(examCount)examCount.textContent=BANK.length;document.getElementById("xpMetric").textContent=xp;document.getElementById("levelName").textContent="Nível "+(lv+1)+" · "+LEVELS[lv];document.getElementById("levelBar").style.width=rem+"%";document.getElementById("levelText").textContent=rem+" / 100 XP para o próximo nível";document.getElementById("accuracyMetric").textContent=state.answered?Math.round(state.correct/state.answered*100)+"%":"—";document.getElementById("doneMetric").textContent=state.answered;document.getElementById("correctMetric").textContent=state.correct;document.getElementById("wrongMetric").textContent=state.wrong;document.getElementById("streakMetric").textContent=state.streak;document.getElementById("todayLabel").textContent=new Date().toLocaleDateString("pt-BR",{day:"2-digit",month:"short"});document.querySelector(".welcome h1").textContent="Olá, "+(state.playerName||"estudante")+"! 👋";document.getElementById("subjectGrid").innerHTML=SUBJECTS.map(subjectCard).join("");document.getElementById("subjectGrid2").innerHTML=SUBJECTS.map(subjectCard).join("");renderMissionPath();renderQuestionPath();renderChallengeCards();let goal=state.dailyGoal||5,doneToday=state.history.filter(h=>h.date===new Date().toLocaleDateString("pt-BR")).length;let missions=[["Responder questões de hoje",Math.min(goal,doneToday)+" / "+goal,doneToday>=goal,"📝"],["Conquistar 30 XP",Math.min(30,state.xp)+" / 30 XP",state.xp>=30,"⚡"],["Acertar 3 questões",Math.min(3,state.correct)+" / 3",state.correct>=3,"🎯"]];document.getElementById("dailyMissions").innerHTML=missions.map(m=>`<div class="mission" style="margin:9px 0"><div class="mission-icon">${m[3]}</div><div class="mission-info"><strong>${m[0]}</strong><small>${m[1]} ${m[2]?"· Concluída":""}</small></div><div class="reward">${m[2]?"✓":"Missão"}</div></div>`).join("");document.getElementById("subjectStats").innerHTML=SUBJECTS.map(s=>{let v=state.bySubject[s[0]]||{answered:0,correct:0},p=v.answered?Math.round(v.correct/v.answered*100):0;return `<div style="margin:14px 0"><div style="display:flex;justify-content:space-between"><b>${s[1]} ${s[0]}</b><span class="sub">${v.correct}/${v.answered} acertos · ${p}%</span></div><div class="progress"><span style="width:${p}%"></span></div></div>`}).join("");document.getElementById("history").innerHTML=state.history.length?state.history.slice(-8).reverse().map(h=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)"><span>${h.good?"✅":"❌"} ${h.subject}</span><span class="sub">${h.good?"+10 XP":"Revisar"} · ${h.date}</span></div>`).join(""):"<div class='empty'>Suas respostas aparecerão aqui.</div>";document.getElementById("badgeGrid").innerHTML=BADGES.map(b=>{let earned=b[3](state);return `<div class="card badge-card ${earned?"":"locked"}"><div class="badge-icon">${b[0]}</div><strong>${b[1]}</strong><small>${earned?"Desbloqueada":b[2]}</small></div>`}).join("");document.getElementById("shop").innerHTML=`<div class="mission"><div class="mission-icon">☕</div><div class="mission-info"><strong>Pausa merecida</strong><small>Uma pausa de 15 minutos depois de estudar.</small></div><button class="secondary small-btn" onclick="buyReward(20)">20 🪙</button></div><div class="mission"><div class="mission-icon">🎬</div><div class="mission-info"><strong>Tempo de lazer</strong><small>30 minutos de lazer sem culpa.</small></div><button class="secondary small-btn" onclick="buyReward(40)">40 🪙</button></div>`;document.getElementById("profileName").textContent=state.playerName||"Estudante";document.getElementById("profileLevel").textContent="Nível "+(lv+1)+" · "+LEVELS[lv];document.getElementById("avatarPreview").textContent=state.avatar||"🧑‍🎓";document.getElementById("nameInput").value=state.playerName||"";document.getElementById("goalSelect").value=String(state.dailyGoal||5);let av=["🧑‍🎓","🦊","🐼","🐯","🐸","🐙","🦉","🐲"];document.getElementById("avatarChoices").innerHTML=av.map(a=>`<button class="avatar-choice ${a===(state.avatar||"🧑‍🎓")?"selected":""}" onclick="chooseAvatar('${a}')">${a}</button>`).join("");renderCalendar();renderReviewPanel();const mh=document.getElementById("mockHistory");if(mh){const rows=(state.mockResults||[]).slice(-5).reverse();mh.innerHTML=rows.length?rows.map(r=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)"><span>${r.date}</span><b>${r.correct}/${r.total} · ${r.percent}%</b></div>`).join(""):"Seus resultados aparecerão aqui após o primeiro simulado."}}
 
 function filteredRealBank(){
  const ex=document.getElementById("realExamFilter")?.value||"all";
  const su=document.getElementById("realSubjectFilter")?.value||"all";
  return [...REAL_BANK,...IMPORTED_BANK,...ORIGINAL_BANK].filter(q=>(ex==="all"||q.exam===ex)&&(su==="all"||q.s===su));
 }
-function startRealBank(){
+function startRealBank(){challengeActive=false;
  lessonCompleted=false;
  const pool=filteredRealBank();
  if(!pool.length){showToast("Não há questões para esse filtro.");return}
